@@ -10,9 +10,6 @@
     <ClCompile Include="..\..\dependencies\xcore\src\xcore_profiler_2.cpp">
       <Filter>_Dependencies\xCore</Filter>
     </ClCompile>
-    <ClCompile Include="Game\Game.cpp">
-      <Filter>_Dependencies\Game</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\Example\Example.cpp" />
   </ItemGroup>
   <ItemGroup>

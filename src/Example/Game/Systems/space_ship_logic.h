@@ -5,19 +5,23 @@ struct space_ship_logic : xecs::system::instance
         .m_pName = "space_ship_logic"
     };
 
-    xecs::archetype::instance*  m_pBulletArchetype          {};
     xecs::query::instance       m_QueryThinkingShipsOnly    {};
     xecs::query::instance       m_QueryAnyShips             {};
+    xecs::prefab::guid          m_BulletPrefab              {};
 
     void OnGameStart( void ) noexcept
     {
-        m_pBulletArchetype  = &getOrCreateArchetype<bullet_tuple>();
-
         m_QueryThinkingShipsOnly.m_Must.AddFromComponents<position>();
         m_QueryThinkingShipsOnly.m_NoneOf.AddFromComponents<bullet, timer>();
 
         m_QueryAnyShips.m_Must.AddFromComponents<position>();
         m_QueryAnyShips.m_NoneOf.AddFromComponents<bullet>();
+
+        // Create the prefab for the bullets...
+        m_BulletPrefab = CreatePrefab<position, velocity, bullet, timer, grid_cell>([&](timer& Timer) noexcept
+        {
+            Timer.m_Value = 10;
+        });
     }
 
     using query = std::tuple
@@ -53,7 +57,7 @@ struct space_ship_logic : xecs::system::instance
                     // Hopefully there is not system that intersects me and kills me
                     assert( !NewEntity.isZombie() );
 
-                    m_pBulletArchetype->CreateEntity( [&]( position& Pos, velocity& Vel, bullet& Bullet, timer& Timer, grid_cell& Cell) noexcept
+                    CreatePrefabInstance( 1, m_BulletPrefab, [&]( position& Pos, velocity& Vel, bullet& Bullet, grid_cell& Cell) noexcept
                     {
                         Direction  /= std::sqrt(DistanceSquare);
                         Vel.m_Value = Direction * 2.0f;
@@ -62,8 +66,6 @@ struct space_ship_logic : xecs::system::instance
                         Bullet.m_ShipOwner = NewEntity;
 
                         Cell = grid::ComputeGridCellFromWorldPosition(Pos.m_Value);
-
-                        Timer.m_Value      = 10;
                     });
 
                     return true;

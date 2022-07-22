@@ -296,6 +296,44 @@ namespace xecs::system
                                             getArchetype            ( xecs::component::entity Entity
                                                                     ) const noexcept;
         template
+        < typename...T_COMPONENTS
+        , typename T_FUNCTION   = xecs::tools::empty_lambda
+        > requires
+        ( xecs::tools::assert_standard_function_v<T_FUNCTION>
+        ) xforceinline 
+        [[nodiscard]]  xecs::prefab::guid   CreatePrefab            ( T_FUNCTION&&              Function        = xecs::tools::empty_lambda{}
+                                                                    ) noexcept;
+        template
+        < typename T_FUNCTION   = xecs::tools::empty_lambda
+        > requires
+        ( xecs::tools::assert_standard_function_v<T_FUNCTION>
+        ) xforceinline 
+        [[nodiscard]] xecs::prefab::guid    CreatePrefab            ( const xecs::tools::bits&  ComponentBits
+                                                                    , T_FUNCTION&&              Function        = xecs::tools::empty_lambda{}
+                                                                    ) noexcept;
+        template
+        < typename T_ADD_TUPLE = std::tuple<>
+        , typename T_SUB_TUPLE = std::tuple<>
+        , typename T_FUNCTION  = xecs::tools::empty_lambda
+        > requires
+        ( xecs::tools::assert_standard_function_v<T_FUNCTION>
+        ) xforceinline 
+        void                                CreatePrefabInstance    ( int                       Count
+                                                                    , xecs::prefab::guid        PrefabGuid
+                                                                    , T_FUNCTION&&              Function        = xecs::tools::empty_lambda{}
+                                                                    , bool                      bRemoveRoot     = true
+                                                                    ) noexcept;
+        template
+        < typename T_ADD_TUPLE = std::tuple<>
+        , typename T_SUB_TUPLE = std::tuple<>
+        , typename T_FUNCTION  = xecs::tools::empty_lambda
+        > requires
+        ( xecs::tools::assert_standard_function_v<T_FUNCTION>
+        ) xforceinline 
+        [[nodiscard]] xecs::prefab::guid    CreatePrefabVariant     ( xecs::prefab::guid        PrefabGuid
+                                                                    , T_FUNCTION&&              Function = xecs::tools::empty_lambda{}
+                                                                    ) noexcept;
+        template
         < typename... T_COMPONENTS
         > requires
         ( xecs::tools::assert_valid_tuple_components_v< std::tuple<T_COMPONENTS...> >

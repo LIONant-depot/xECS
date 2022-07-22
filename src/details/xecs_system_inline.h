@@ -276,9 +276,62 @@ instance::AddOrRemoveComponents
 
     //-------------------------------------------------------------------------------------------
 
-    [[nodiscard]] xecs::archetype::instance& instance::getArchetype(xecs::component::entity Entity) const noexcept
+    xecs::archetype::instance& instance::getArchetype(xecs::component::entity Entity) const noexcept
     {
         return m_GameMgr.getArchetype(Entity);
+    }
+
+    //-------------------------------------------------------------------------------------------
+
+    template
+    < typename...T_COMPONENTS
+    , typename   T_FUNCTION
+    > requires
+    ( xecs::tools::assert_standard_function_v<T_FUNCTION>
+    )  
+    xecs::prefab::guid instance::CreatePrefab( T_FUNCTION&& Function ) noexcept
+    {
+        return m_GameMgr.CreatePrefab<T_COMPONENTS...>( std::forward<T_FUNCTION&&>( Function) );
+    }
+
+    //-------------------------------------------------------------------------------------------
+
+    template
+    < typename T_FUNCTION
+    > requires
+    ( xecs::tools::assert_standard_function_v<T_FUNCTION>
+    )  
+    xecs::prefab::guid instance::CreatePrefab( const xecs::tools::bits& ComponentBits, T_FUNCTION&& Function ) noexcept
+    {
+        return m_GameMgr.CreatePrefab(ComponentBits, std::forward<T_FUNCTION&&>(Function));
+    }
+
+    //-------------------------------------------------------------------------------------------
+
+    template
+    < typename T_ADD_TUPLE
+    , typename T_SUB_TUPLE
+    , typename T_FUNCTION 
+    > requires
+    ( xecs::tools::assert_standard_function_v<T_FUNCTION>
+    )  
+    void instance::CreatePrefabInstance ( int Count, xecs::prefab::guid PrefabGuid, T_FUNCTION&& Function, bool bRemoveRoot ) noexcept
+    {
+        m_GameMgr.CreatePrefabInstance<T_ADD_TUPLE, T_SUB_TUPLE>( Count, PrefabGuid, std::forward<T_FUNCTION&&>(Function), bRemoveRoot );
+    }
+
+    //-------------------------------------------------------------------------------------------
+
+    template
+    < typename T_ADD_TUPLE
+    , typename T_SUB_TUPLE
+    , typename T_FUNCTION
+    > requires
+    ( xecs::tools::assert_standard_function_v<T_FUNCTION>
+    )  
+    xecs::prefab::guid instance::CreatePrefabVariant( xecs::prefab::guid PrefabGuid, T_FUNCTION&& Function ) noexcept
+    {
+        return m_GameMgr.CreatePrefabInstance<T_ADD_TUPLE, T_SUB_TUPLE>( PrefabGuid, std::forward<T_FUNCTION&&>(Function) );
     }
 
     //-------------------------------------------------------------------------------------------

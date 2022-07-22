@@ -130,8 +130,8 @@ namespace xecs::archetype
 
                     if constexpr (std::is_pointer_v<T>) if (MyP == nullptr) return reinterpret_cast<T>(nullptr);
 
-                    auto p = MyP;                   // Back up the pointer
-                    MyP += sizeof(std::decay_t<T>); // Get ready for the next entity
+                    auto p = MyP;                            // Back up the pointer
+                    MyP += sizeof(std::remove_pointer_t<T>); // Get ready for the next entity
 
                     if constexpr (std::is_pointer_v<T>) return reinterpret_cast<T>(p);
                     else                                return reinterpret_cast<T>(*p);
@@ -159,8 +159,8 @@ namespace xecs::archetype
 
                     if constexpr (std::is_pointer_v<T>) if (MyP == nullptr) return reinterpret_cast<T>(nullptr);
 
-                    auto p = MyP;                   // Back up the pointer
-                    MyP += sizeof(std::decay_t<T>); // Get ready for the next entity
+                    auto p = MyP;                            // Back up the pointer
+                    MyP += sizeof(std::remove_pointer_t<T>); // Get ready for the next entity
 
                     if constexpr (std::is_pointer_v<T>) return reinterpret_cast<T>(p);
                     else                                return reinterpret_cast<T>(*p);

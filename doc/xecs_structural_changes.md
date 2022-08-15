@@ -38,7 +38,7 @@ Unlike Unity3D this is not queue and the execution happens right away, which mea
 
 |||
 |:---:|---|
-| WARNING::warning: | There is one negative thing that it could happen using the xECS way. Is that even though a moved entity is invisible a system may want to do another loop and revisit this entity, however it won't be able to find it since it was created and the update structural changes has not been executed. This is a very edge case, and for now xECS will ignore it. |
+| WARNING::warning: | xECS does not support a System that moves an entity for whatever reason and then wants to do a second loop throw all the entities again and expect to find the same entity. Because ones an entity has been moved it is assumed to be invisible until the next system executes. This is something that Unity3D supports correctly. | 
 
 ## Moving cause by changing the value of share-components
 
@@ -46,6 +46,6 @@ Each entity is store inside a ***xecs::pool::family***. A [family](xecs_componen
 
 |||
 |:---:|---|
-| DANGER::skull:| xECS does not support a System that updates a [share-component](xecs_component_types_share.md) data and at the same time also adds new components as well. | 
+| DANGER::skull:| xECS does not support a System that updates the [share-component](xecs_component_types_share.md) data of an entity and at the same time also adds new components to that entity as well. xECS will miss behave in this case and probably crash. | 
 
 ---

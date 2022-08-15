@@ -16,9 +16,9 @@ ALL THESE DOCUMENTATION IS VERY MUCH A WIP
 
 The structural map is an overview of xECS from an structure point of view. There are several structures that could be done to support all the require features for ECS, some of the alternatives can be found [Here](xecs_architectural_alternatives.md). However the selected structural method is while a bit memory wasted is very fast and efficient.
 
-
-| Positives   | * Minimizes the number of archetypes, so makes searches fast<br> * When dealing with all scenes at ones is fast.<br> * No need to search which scene we need to deal with|
+|||
 |:---:|------|
+| Positives   | * Minimizes the number of archetypes, so makes searches fast<br> * When dealing with all scenes at ones is fast.<br> * No need to search which scene we need to deal with|
 | Negatives   | * Memory wasted for an array of max scenes pointers per archetype (expecting MAX_SCENES to be around 16, in a 2D grid there are 3*3=9). This also limits how many scenes you can have open in the editor at the same time. |
 
 ~~~c++         

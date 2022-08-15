@@ -1,12 +1,14 @@
 <img src="https://i.imgur.com/TyjrCTS.jpg" align="right" width="220px" /><br>
 # [xECS](xecs.md) / Structural Changes
 
-Structural changes in an ECS means that an entity was either created, deleted, or a combination of both (such in the case of adding or removing components, which causes an entity to be created in a new archetype, its data copied and deleted from the old archetype, check [Archetype](xecs_archetype.md) for more information).
+Structural changes in an ECS means that an entity was either created, deleted, or a combination of both (such in the case of adding or removing components, which causes an entity to be created in a new [Archetype](xecs_archetype.md), its data copied and deleted from the old [Archetype](xecs_archetype.md).
 
-These structural changes is probably one of the most dangerous things than an ECS does, and can cause many bugs for the user as well as performance issues. There are two ways to solve this problem:
+These structural changes is probably one of the most dangerous things an ECS does, and can cause many bugs for the user as well as performance issues. There are two ways to solve this problem:
 
-1. The Unity 3D way. How they solved it is that all commands that causes structural changes are queue and executed after the system ends up running. This method has the side effect of using more memory and been less performant, as well as loosing some functionality, but the positive side is that is very easy to program and very safe. 
-2. The xECS way. It executed everything right away, while trying to maintain reasonable expectations from the user. This makes the code a bit more complex for the user because certain system need to check if an entity is already dead, but this also allows the user to have all the functionality unlike Unity, and in terms of memory and performance is allot faster. The negative side is that it has some side effects which we cover in this section.
+| Method | Description|
+|:-------:|---|
+| Unity3D | How they solved it is that all commands that causes structural changes are queue and executed after the system ends up running. This method has the side effect of using more memory and been less performant, as well as loosing some functionality, but the positive side is that is very easy to program and very safe. |
+| xECS | It executed everything right away, while trying to maintain reasonable expectations from the user. This makes the code a bit more complex for the user because certain system need to check if an entity is already dead, but this also allows the user to have all the functionality unlike Unity, and in terms of memory and performance is allot faster. The negative side is that it has some side effects which we cover in this section |
 
 |||
 |:---:|---|
@@ -39,6 +41,7 @@ Unlike Unity3D this is not queue and the execution happens right away, which mea
 |||
 |:---:|---|
 | WARNING::warning: | xECS does not support a System that moves an entity for whatever reason and then wants to do a second loop throw all the entities again and expect to find the same entity. Because ones an entity has been moved it is assumed to be invisible until the next system executes. This is something that Unity3D supports correctly. | 
+| TODO::page_with_curl: | xECS could solve the above problem with a function that does some structural updates (Like update the counts), without touching the dangerous parts (deleting entities or adding archetypes to filters or adding new families to the archetype). | 
 
 ## Moving cause by changing the value of share-components
 

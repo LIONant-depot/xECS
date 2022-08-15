@@ -1,13 +1,14 @@
 <img src="https://i.imgur.com/TyjrCTS.jpg" align="right" width="220px" /><br>
-# [xECS](xecs.md) / Structural Alternatives
+# [xECS](xecs.md) / Architectural Alternatives
 
 When deciding how to organize xECS from the point of view of structures while supporting all the require features, yet maximizing performance and minimizing allocations the following methods were consider.
 
 
 ### Method A (Alternative)
 
+|||
+|:---:|------|
 | Positives   | * Minimizes the number of archetypes, so makes searches fast<br> * When dealing with all scenes at ones is fast. |
-|------|------|
 | Negatives   | * When dealing with a particular set of scenes a search for which sub-scene must be made for every archetype<br> * New structures (SubScene)<br>|
 
 ~~~c++
@@ -49,8 +50,9 @@ Vector<Archetype>  Archetype                                                    
 
 ### Method B (Alternative)
 
+|||
+|:---:|------|
 | Positives   | * No need to search which scene we need to deal with<br> * More compact representation for Scenes  |
-|------|------|
 | Negatives   | * The number of archetypes is multiplied by the number of Scenes <br> * Search queries is are slower because they are multiplied by the number of scenes. <br> * Search queries are larger in memory|
 
 ~~~cpp

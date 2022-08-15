@@ -42,7 +42,7 @@ namespace xecs::archetype
         constexpr __inline
         std::span<const xecs::component::type::info* const>   
                                 getDataComponentInfos   ( void
-                                                        ) const noexcept { return { m_InfoData.data(), static_cast<std::size_t>(m_nDataComponents) }; }
+                                                        ) const noexcept { return { m_InfoArray.data(), static_cast<std::size_t>(m_nDataComponents) }; }
         constexpr __inline
         int                     getShareComponentCount  ( void
                                                         ) const noexcept { return m_nShareComponents; }
@@ -239,7 +239,8 @@ protected:
                                                         , T_CALLBACK&&          Function = xecs::tools::empty_lambda{}
                                                         ) noexcept;
 
-        using share_archetypes_array = std::array<xecs::archetype::instance*,   xecs::settings::max_components_per_entity_v >;
+        using share_archetypes_array = std::array<xecs::archetype::instance*,    xecs::settings::max_components_per_entity_v >;
+        using scene_array            = std::array<std::unique_ptr<pool::family>, xecs::settings::max_scenes_v >;
 
         xecs::archetype::mgr&               m_Mgr;
         guid                                m_Guid                      {};
@@ -248,13 +249,15 @@ protected:
         std::uint8_t                        m_nDataComponents           {};
         std::uint8_t                        m_nShareComponents          {};
         pool::family                        m_DefaultPoolFamily         {};
-        xecs::component::entity::info_array m_InfoData                  {}; // rename to InfoArray
+        xecs::component::entity::info_array m_InfoArray                 {};
         instance*                           m_pPendingStructuralChanges {};
         share_archetypes_array              m_ShareArchetypesArray      {};
         std::unique_ptr<pool::family>       m_PoolFamilyPending         {};
+        scene_array                         m_SceneArray                {};
 
     public:
         events                              m_Events                    {};
+
     friend struct mgr;
     friend struct pool::family;
     friend struct system::mgr;

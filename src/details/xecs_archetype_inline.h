@@ -187,7 +187,7 @@ namespace xecs::archetype
     {
         xecs::tools::bits BitsNoFlags;
         for( int i=0; i< BitsNoFlags.m_Bits.size(); ++i ) BitsNoFlags.m_Bits[i] = AllComponentsBits.m_Bits[i] & (~xecs::component::mgr::s_TagsBits.m_Bits[i]);
-        int nInfos = BitsNoFlags.ToInfoArray(m_InfoData);
+        int nInfos = BitsNoFlags.ToInfoArray(m_InfoArray);
 
         BitsNoFlags.setupAnd(BitsNoFlags, xecs::component::mgr::s_ShareBits);
         m_nShareComponents = BitsNoFlags.CountComponents();
@@ -198,7 +198,7 @@ namespace xecs::archetype
 #ifdef _DEBUG
         {
             // First component should the the entity
-            assert(m_InfoData[0] == &xecs::component::type::info_v<xecs::component::entity>);
+            assert(m_InfoArray[0] == &xecs::component::type::info_v<xecs::component::entity>);
 
             // Entity bit should be turn on
             assert(AllComponentsBits.getBit(xecs::component::type::info_v<xecs::component::entity>.m_BitID));
@@ -207,10 +207,10 @@ namespace xecs::archetype
             for (int i = 1; i < nInfos; ++i)
             {
                 // There should be no duplication of components
-                assert(m_InfoData[i - 1] != m_InfoData[i]);
+                assert(m_InfoArray[i - 1] != m_InfoArray[i]);
 
                 // Check that the bits match
-                assert( AllComponentsBits.getBit(m_InfoData[i]->m_BitID));
+                assert( AllComponentsBits.getBit(m_InfoArray[i]->m_BitID));
             }
         }
 #endif
@@ -245,8 +245,8 @@ namespace xecs::archetype
                 , xecs::component::ref_count
                 , xecs::component::share_as_data_exclusive_tag
                 >();
-                if(m_InfoData[m_nDataComponents + i]->m_bBuildShareFilter) ShareEntityBits.setBit(xecs::component::type::info_v<xecs::component::share_filter>.m_BitID);
-                ShareEntityBits.setBit(m_InfoData[m_nDataComponents + i]->m_BitID);
+                if(m_InfoArray[m_nDataComponents + i]->m_bBuildShareFilter) ShareEntityBits.setBit(xecs::component::type::info_v<xecs::component::share_filter>.m_BitID);
+                ShareEntityBits.setBit(m_InfoArray[m_nDataComponents + i]->m_BitID);
 
                 m_ShareArchetypesArray[i] = &m_Mgr.getOrCreateArchetype(ShareEntityBits);
             }
@@ -289,7 +289,7 @@ namespace xecs::archetype
 
             // Make sure that the components that the user gave us are with in this archetype infos
             bool bFound = false;
-            for( auto s : std::span{ &m_InfoData[m_nDataComponents], (std::size_t)m_nShareComponents } )
+            for( auto s : std::span{ &m_InfoArray[m_nDataComponents], (std::size_t)m_nShareComponents } )
             {
                 if( s == e ) 
                 {
@@ -336,7 +336,7 @@ namespace xecs::archetype
         xecs::pool::family::guid FamilyGuid{ m_Guid.m_Value };
         for( int i=0; i< m_nShareComponents; i++ )
         {
-            auto pInfo = m_InfoData[ m_nDataComponents + i ];
+            auto pInfo = m_InfoArray[ m_nDataComponents + i ];
             int  Index = -1;
             for( int j=0; j< TypeInfos.size(); j++ )
             {
@@ -366,7 +366,7 @@ namespace xecs::archetype
         std::array<xecs::component::entity, xecs::settings::max_share_components_per_entity_v> ShareComponentEntityRefs;
         for (int i = 0; i < m_nShareComponents; i++)
         {
-            auto pInfo = m_InfoData[m_nDataComponents + i];
+            auto pInfo = m_InfoArray[m_nDataComponents + i];
 
             //
             // Does this share component exists?
@@ -419,7 +419,7 @@ namespace xecs::archetype
 
         // Make sure we have the same share components
         xassert( OtherArchetypeFamily.m_ShareInfos.size() == m_nShareComponents );
-        xassert( [&]{for( int i=0, end = (int)OtherArchetypeFamily.m_ShareInfos.size(); i<end; ++i) xassert( OtherArchetypeFamily.m_ShareInfos[i] == m_InfoData[ m_nDataComponents + i] ); return true; }() );
+        xassert( [&]{for( int i=0, end = (int)OtherArchetypeFamily.m_ShareInfos.size(); i<end; ++i) xassert( OtherArchetypeFamily.m_ShareInfos[i] == m_InfoArray[ m_nDataComponents + i] ); return true; }() );
 
         // Compute the GUID
         std::array<xecs::component::type::share::key, xecs::settings::max_share_components_per_entity_v> AllKeys;
@@ -451,7 +451,7 @@ namespace xecs::archetype
         std::array<xecs::component::entity, xecs::settings::max_share_components_per_entity_v> ShareComponentEntityRefs;
         for (int i = 0; i < m_nShareComponents; i++)
         {
-            auto pInfo = m_InfoData[m_nDataComponents + i];
+            auto pInfo = m_InfoArray[m_nDataComponents + i];
 
             //
             // Does this share component exists?
@@ -881,7 +881,7 @@ instance::_CreateEntities
             return std::array
             { [&]<typename J>(J*) constexpr noexcept
                 {
-                    while( m_InfoData[Sequence] != &xecs::component::type::info_v<J> ) Sequence++;
+                    while( m_InfoArray[Sequence] != &xecs::component::type::info_v<J> ) Sequence++;
                     return Sequence;
                 }(reinterpret_cast<T*>(0))
                 ...
@@ -1152,8 +1152,8 @@ instance::_MoveInEntity
         , *this
         , ShareEntityList
         , ShareKeyList
-        , std::span{ m_InfoData.data() + m_nDataComponents, static_cast<std::size_t>(m_nShareComponents) }
-        , std::span{ m_InfoData.data(),                     static_cast<std::size_t>(m_nDataComponents) }
+        , std::span{ m_InfoArray.data() + m_nDataComponents, static_cast<std::size_t>(m_nShareComponents) }
+        , std::span{ m_InfoArray.data(),                     static_cast<std::size_t>(m_nDataComponents) }
         );
 
         //

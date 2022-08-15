@@ -12,6 +12,7 @@ namespace xecs::settings
     constexpr auto max_entity_count_per_pool_v          = 50000;
     constexpr auto max_entities_v                       = 500000;
     constexpr auto virtual_page_size_v                  = 4096;
+    constexpr auto max_scenes_v                         = 16;
 
     //------------------------------------------------------------------
     // Validations

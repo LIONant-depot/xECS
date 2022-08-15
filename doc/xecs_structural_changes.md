@@ -12,7 +12,8 @@ These structural changes is probably one of the most dangerous things an ECS doe
 
 |||
 |:---:|---|
-| TODO:<br>:page_with_curl: | xECS needs to add support for a system which changes the [share-component](xecs_component_types_share.md) data of an entity and also deletes the entity. This is currently is not supported. | 
+| TODO:<br>:page_with_curl: | xECS needs to add support for a system which changes the [share-component](xecs_component_types_share.md) data of an entity and also deletes the entity. |
+| WARNING:<br>:warning: | This is currently is not supported. | 
 
 ## Updating structural changes
 

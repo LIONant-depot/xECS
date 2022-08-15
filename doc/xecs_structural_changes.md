@@ -41,7 +41,7 @@ Unlike Unity3D this is not queue and the execution happens right away, which mea
 |||
 |:---:|---|
 | WARNING:<br>:warning: | xECS does not support a System that moves an entity for whatever reason and then wants to do a second loop throw all the entities again and expect to find the same entity. Because ones an entity has been moved it is assumed to be invisible until the next system executes. This is something that Unity3D supports correctly. | 
-| TODO:<br>:page_with_curl: | xECS could solve the above problem with a function that does some structural updates (Like update the counts), without touching the dangerous parts (deleting entities or adding archetypes to filters or adding new families to the archetype). | 
+| TODO:<br>:page_with_curl: | xECS could solve the above problem with a function that does some structural updates (Like update the counts, and inserting new families in the archetypes. However the user may need to re-query as new archetypes may have also been created), without touching the dangerous parts (deleting entities, or adding archetypes to filters). This will still have the limitation that system that uses share filters won't work as expected but this may be a very edge case, and may require more research. | 
 
 ## Moving cause by changing the value of share-components
 

@@ -25,38 +25,7 @@ In ECS it is very important to do searches for the right Archetypes, to speed up
 
 ## Structural Changes
 
-Structural changes are schedule very carefully, for xECS it tries to commit changes as soon as it can unlike Unity which buffers the creation, deletion, and adding and removing components. For the perfective on an archetype the only thing that postpone execution is when adding a new **xecs::pool::family**. There are two reasons why new families are added:
-
-1. An entity changed the value of one of its share components, and there was not family with those specific values.
-2. A system adds a share component to an entity and there was not family with that specific value.
-
-This new family is hidden until xECS system finish running, this is because we want to prevent the iterator from iterating inside the new family. Because if it does, then the system would run the same entity twice.
-
-It is true that this solves the case for moved entities, but what about:
-
-a) entities that don't require new families
-b) system that update the share component and add new components as well. (this one could be specially dangerous.)
-
-
-Updating the share filter is in fact the main reason to postpone the reveal of the new family. Since someone could be going throw all the families of a particular Archetype. Changing that vector right away could cause the vector to reallocate and mess up the iterator. Indirectly this solves the problem of iterating throw the same entity twice only in the case of new family.
-
-While is true that new added entities are hidden until the structures changes are executed this could have also a side effect of loosing an entity because of components add/delete in a double loop.
-
-
----
-
-For Archetypes structural changes only happens when new families are added to the archetype. 
-
-
-Structural changes for an archetype only means that the archetype has been created. It is important for the system to know this because the archetype should remain hidden until the system finish running. Because from the point of view an a system nothing should really change except entities becoming zombies. (WHAT ABOUT ENTITIES THAT COMPONENTS ARE ADDED/DELETED????) 
-
----
-
-## Families
-
-
-Structural changes happens when entities are created or destroyed. Some functions such adding adding components to an entity do both (deletes one into from one archetype and creates another entity in another archetype). Please note that unlike Unity, xECS does not queue the operation, the action happens immediately, what happens after wards is the update of the pools. A system that may iterate throw a list of entities twice can check if an entity is deleted by checking if the entity is a zombie or not. If the system is not deleting entities it does not need to check for anything.
-
-## Pools
+Structural changes are schedule very carefully, for xECS it tries to commit changes as soon as it can unlike Unity which buffers the creation, deletion, and adding and removing components. For the perfective on an archetype the only thing that postpone execution is when adding a new [xecs::pool::family](xecs_component_types_share.md). For more information about [Structural Changes](xecs_structural_changes.md)
 
 ## Scenes
+

@@ -25,15 +25,14 @@ namespace xecs::query
         {
             static_assert(xcore::function::is_callable_v<T_FUNCTION>);
 
+            template< typename T >
+            using                   universal_t         = xcore::types::decay_full_t<T>*;
             using                   func                = xcore::function::traits<T_FUNCTION>;
             static constexpr auto   mode_v              = mode::DATA_ONLY;
             using                   data_tuple_unfilter = typename func::args_tuple;
-            template< typename T >
-            using                   universal_t         = xcore::types::decay_full_t<T>*;
+            constexpr static inline auto f              = [] <typename...T>(std::tuple<T...>*) consteval -> xcore::types::tuple_cat_t< std::tuple<universal_t<T>> ... > {};
             using                   data_tuple          = std::invoke_result_t
-            < decltype
-                (   []<typename...T>(std::tuple<T...>*) -> xcore::types::tuple_cat_t< std::tuple<universal_t<T>> ... >{}
-                )
+            < decltype(f)
             , decltype(xcore::types::null_tuple_v<typename func::args_tuple>)
             >;
 
@@ -53,33 +52,32 @@ namespace xecs::query
 
             static constexpr auto mode_v = mode::DATA_AND_SHARES;
 
+            constexpr static inline auto f1 = [] <typename...T>(std::tuple<T...>*) consteval ->xcore::types::tuple_cat_t
+            <
+                std::conditional_t
+                < xecs::component::type::info_v<T>.m_TypeID == xecs::component::type::id::SHARE
+                , std::tuple<T>
+                , std::tuple<>
+                > ...
+            > {};
+
             using share_tuple_unfilter              = std::invoke_result_t
-            < decltype
-                (   []<typename...T>(std::tuple<T...>*)->xcore::types::tuple_cat_t
-                    <
-                        std::conditional_t
-                        < xecs::component::type::info_v<T>.m_TypeID == xecs::component::type::id::SHARE
-                        , std::tuple<T>
-                        , std::tuple<>
-                        > ...
-                    >{}
-                )
+            < decltype( f1 )
             , decltype(xcore::types::null_tuple_v<typename func::args_tuple>)
             >;
 
             using share_tuple_full_decay            = xcore::types::tuple_decay_full_t<share_tuple_unfilter>;
             
+            constexpr static inline auto f2 = [] <typename...T>(std::tuple<T...>*) consteval ->xcore::types::tuple_cat_t
+            <
+                std::conditional_t
+                < std::is_const_v<T>
+                , std::tuple<>
+                , std::tuple<T>
+                > ...
+            > {};
             using share_tuple_changables_unfilter   = std::invoke_result_t
-            < decltype
-                (   []<typename...T>(std::tuple<T...>*) -> xcore::types::tuple_cat_t
-                    <
-                        std::conditional_t
-                        < std::is_const_v<T>
-                        , std::tuple<>
-                        , std::tuple<T>
-                        > ...
-                    >{}
-                )
+            < decltype( f2 )
             , decltype(xcore::types::null_tuple_v<share_tuple_unfilter>)
             >;
 
@@ -90,18 +88,17 @@ namespace xecs::query
 
             static_assert(share_count_v);
 
+            constexpr static inline auto f3 = []<typename...T>(std::tuple<T...>*) consteval ->xcore::types::tuple_cat_t
+            <
+                std::conditional_t
+                < xecs::component::type::info_v<T>.m_TypeID == xecs::component::type::id::DATA
+                , std::tuple<T>
+                , std::tuple<>
+                > ...
+            > {};
 
             using data_tuple_unfilter = std::invoke_result_t
-            < decltype
-                (   []<typename...T>(std::tuple<T...>*) -> xcore::types::tuple_cat_t
-                    <
-                        std::conditional_t
-                        < xecs::component::type::info_v<T>.m_TypeID == xecs::component::type::id::DATA
-                        , std::tuple<T>
-                        , std::tuple<>
-                        > ...
-                    >{}
-                )
+            < decltype( f3 )
             , decltype(xcore::types::null_tuple_v<typename func::args_tuple>)
             >;
 
@@ -124,38 +121,38 @@ namespace xecs::query
                 >
             >;
 
+            constexpr static inline auto f4 = []<typename...T>(std::tuple<T...>*) consteval -> xcore::types::tuple_cat_t< std::tuple<universal_t<T>> ... > {};
+
             using data_tuple = std::invoke_result_t
-            < decltype
-                (   []<typename...T>(std::tuple<T...>*) -> xcore::types::tuple_cat_t< std::tuple<universal_t<T>> ... >{}
-                )
+            < decltype( f4 )
             , decltype(xcore::types::null_tuple_v<typename func::args_tuple>)
             >;
+
+            constexpr static inline auto f5 = []<typename...T>(std::tuple<T...>*) consteval ->xcore::types::tuple_cat_t
+            <
+                std::conditional_t
+                < xecs::component::type::info_v<T>.m_TypeID == xecs::component::type::id::SHARE
+                , std::tuple<universal_t<T>>
+                , std::tuple<>
+                > ...
+            > {};
 
             using share_tuple = std::invoke_result_t
-            < decltype
-                (   []<typename...T>(std::tuple<T...>*) -> xcore::types::tuple_cat_t
-                    <
-                        std::conditional_t
-                        < xecs::component::type::info_v<T>.m_TypeID == xecs::component::type::id::SHARE
-                        , std::tuple<universal_t<T>>
-                        , std::tuple<>
-                        > ...
-                    >{}
-                )
+            < decltype( f5 )
             , decltype(xcore::types::null_tuple_v<typename func::args_tuple>)
             >;
 
+            constexpr static inline auto f6 = []<typename...T>(std::tuple<T...>*) consteval -> xcore::types::tuple_cat_t
+            <
+                std::conditional_t
+                < xecs::component::type::info_v<T>.m_TypeID == xecs::component::type::id::SHARE && (false == std::is_pointer_v<universal_t<T>>)
+                , std::tuple<xcore::types::decay_full_t<T>*>
+                , std::tuple<>
+                > ...
+            >{};
+
             using share_tuple_pointers = std::invoke_result_t
-            < decltype
-                (   []<typename...T>(std::tuple<T...>*) -> xcore::types::tuple_cat_t
-                    <
-                        std::conditional_t
-                        < xecs::component::type::info_v<T>.m_TypeID == xecs::component::type::id::SHARE && (false == std::is_pointer_v<universal_t<T>>)
-                        , std::tuple<xcore::types::decay_full_t<T>*>
-                        , std::tuple<>
-                        > ...
-                    >{}
-                )
+            < decltype( f6 )
             , decltype(xcore::types::null_tuple_v<typename func::args_tuple>)
             >;
             static_assert(nonconst_share_count_v == std::tuple_size_v<share_tuple_pointers>);

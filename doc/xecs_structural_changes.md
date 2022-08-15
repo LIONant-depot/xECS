@@ -12,7 +12,7 @@ These structural changes is probably one of the most dangerous things an ECS doe
 
 |||
 |:---:|---|
-| TODO::page_with_curl: | xECS needs to add support for a system which changes the [share-component](xecs_component_types_share.md) data of an entity and also deletes the entity. This is currently is not supported. | 
+| TODO:<br>:page_with_curl: | xECS needs to add support for a system which changes the [share-component](xecs_component_types_share.md) data of an entity and also deletes the entity. This is currently is not supported. | 
 
 ## Updating structural changes
 
@@ -40,8 +40,8 @@ Unlike Unity3D this is not queue and the execution happens right away, which mea
 
 |||
 |:---:|---|
-| WARNING::warning: | xECS does not support a System that moves an entity for whatever reason and then wants to do a second loop throw all the entities again and expect to find the same entity. Because ones an entity has been moved it is assumed to be invisible until the next system executes. This is something that Unity3D supports correctly. | 
-| TODO::page_with_curl: | xECS could solve the above problem with a function that does some structural updates (Like update the counts), without touching the dangerous parts (deleting entities or adding archetypes to filters or adding new families to the archetype). | 
+| WARNING:<br>:warning: | xECS does not support a System that moves an entity for whatever reason and then wants to do a second loop throw all the entities again and expect to find the same entity. Because ones an entity has been moved it is assumed to be invisible until the next system executes. This is something that Unity3D supports correctly. | 
+| TODO:<br>:page_with_curl: | xECS could solve the above problem with a function that does some structural updates (Like update the counts), without touching the dangerous parts (deleting entities or adding archetypes to filters or adding new families to the archetype). | 
 
 ## Moving cause by changing the value of share-components
 
@@ -49,6 +49,6 @@ Each entity is store inside a ***xecs::pool::family***. A [family](xecs_componen
 
 |||
 |:---:|---|
-| DANGER::skull:| xECS does not support a System that updates the [share-component](xecs_component_types_share.md) data of an entity and at the same time also adds new components to that entity as well. xECS will miss behave in this case and probably crash. | 
+| DANGER:<br>:skull:| xECS does not support a System that updates the [share-component](xecs_component_types_share.md) data of an entity and at the same time also adds new components to that entity as well. xECS will miss behave in this case and probably crash. | 
 
 ---

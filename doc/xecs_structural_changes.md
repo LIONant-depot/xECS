@@ -8,7 +8,7 @@ These structural changes is probably one of the most dangerous things than an EC
 1. The Unity 3D way. How they solved it is that all commands that causes structural changes are queue and executed after the system ends up running. This method has the side effect of using more memory and been less performant, as well as loosing some functionality, but the positive side is that is very easy to program and very safe. 
 2. The xECS way. It executed everything right away, while trying to maintain reasonable expectations from the user. This makes the code a bit more complex for the user because certain system need to check if an entity is already dead, but this also allows the user to have all the functionality unlike Unity, and in terms of memory and performance is allot faster. The negative side is that it has some side effects which we cover in this section.
 
-| TODO::page_with_curl: | xECS needs to add support for an entity that has changed the [share-component](xecs_component_types_share.md) data and also deleted itself. This is currently not working. | 
+| TODO::page_with_curl: | xECS needs to add support for a system which changes the [share-component](xecs_component_types_share.md) data of an entity and also deletes the entity. This is currently is not supported. | 
 |:---:|---|
 
 ## Updating structural changes
@@ -35,7 +35,7 @@ Moving entities from one [Archetype](xecs_archetype.md) to another is cause by a
 
 Unlike Unity3D this is not queue and the execution happens right away, which means that all additional data that new components may need gets resolved right away.
 
-| :warning: | <span style="color:yellow">There is one negative thing that it could happen using the xECS way. Is that even though a moved entity is invisible a system may want to do another loop and revisit this entity, however it won't be able to find it since it was created and the update structural changes has not been executed. This is a very edge case, and for now xECS will ignore it.</span> |
+| :interrobang::warning: | <span style="color:yellow">There is one negative thing that it could happen using the xECS way. Is that even though a moved entity is invisible a system may want to do another loop and revisit this entity, however it won't be able to find it since it was created and the update structural changes has not been executed. This is a very edge case, and for now xECS will ignore it.</span> |
 |:---:|---|
 
 ## Moving cause by changing the value of share-components

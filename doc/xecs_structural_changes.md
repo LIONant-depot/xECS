@@ -12,8 +12,9 @@ These structural changes is probably one of the most dangerous things an ECS doe
 
 |||
 |:---:|---|
-| TODO:<br>:page_with_curl: | xECS needs to add support for a system which changes the [share-component](xecs_component_types_share.md) data of an entity and also deletes the entity. |
-| WARNING:<br>:warning: | This is currently is not supported. | 
+| DANGER:<br>:skull:| xECS does not support a System that updates the [share-component](xecs_component_types_share.md) data of an entity and at the same time also adds new components to that entity as well. xECS will misbehave in this case and probably crash. This is a fundamental limitation of xECS. | 
+| WARNING:<br>:warning: | xECS needs to add support for a system which changes the [share-component](xecs_component_types_share.md) data of an entity and also deletes the entity. | 
+| TODO:<br>:page_with_curl: | Add support for a system which changes the [share-component](xecs_component_types_share.md) data of an entity and also deletes the entity. |
 
 ## Updating structural changes
 
@@ -47,9 +48,5 @@ Unlike Unity3D this is not queue and the execution happens right away, which mea
 ## Moving cause by changing the value of share-components
 
 Each entity is store inside a ***xecs::pool::family***. A [family](xecs_component_types_share.md) is a set of specific values of an entity [share-components](xecs_component_types_share.md). Which means that if a one of the share-component values of an entity changes the entity must be moved to the right [family](xecs_component_types_share.md). Moving the entity work like we explain previously, however besides moving the entity we also have a new family which also must be added to the [Archetype](xecs_archetype.md). We don't want to change the number of families for an archetype right away to prevent unexpected consequences. (Such a system doing a double iteration throw the same archetypes, even though there should be not visible entities for those new families, they really add nothing but overhead.) Father more [share-components](xecs_component_types_share.md) have something call filters. Updating the share filter is in fact the main reason to postpone the reveal of the new family. Since someone could be going throw all the families of a particular [Archetype](xecs_archetype.md). Changing that vector right away could cause the vector to reallocate and mess up the iterator.
-
-|||
-|:---:|---|
-| DANGER:<br>:skull:| xECS does not support a System that updates the [share-component](xecs_component_types_share.md) data of an entity and at the same time also adds new components to that entity as well. xECS will miss behave in this case and probably crash. | 
 
 ---

@@ -11,6 +11,8 @@ ALL THESE DOCUMENTATION IS VERY MUCH A WIP
 * [Components](xecs_component.md) - Component stuff
 * [Prefabs](xecs_prefab.md) - Prefabs topic
 * [Scene](xecs_scene.md) - Scene topics
+* [Structural Changes](xecs_structural_changes.md) - Creation, and Deletion of entities
+* [Archetypes](xecs_archetype.md) - The grouping of entities by components
 
 ## XECS Structural map
 

@@ -3,7 +3,7 @@
 
 Archetypes defines a unique set of components for an entity. All entities with the same set of components will end up in the same archetype, even if they belong to a different scene. This allow for fast queries, good memory management, and fast entity iteration by systems. 
 
-Structural Overview of an Archetype
+### Structural Overview of an Archetype
 ~~~cpp
         Archetype                        
         +-------------------------------+

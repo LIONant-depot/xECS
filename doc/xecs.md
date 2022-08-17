@@ -4,15 +4,17 @@
 
 Cross platform **Event Component And Systems**, is a type of *Entity Component and System*.
 
+| WARNING:<br>:warning: | *ALL THESE DOCUMENTATION IS VERY MUCH IN "WORK IN PROGRESS" STATE | 
+|:---:|---|
 
-ALL THESE DOCUMENTATION IS VERY MUCH A WIP
-
-* [App Context](xecs_app_context.md) - How xecs is used under different apps
 * [Components](xecs_component.md) - Component stuff
-* [Prefabs](xecs_prefab.md) - Prefabs topic
-* [Scene](xecs_scene.md) - Scene topics
-* [Structural Changes](xecs_structural_changes.md) - Creation, and Deletion of entities
 * [Archetypes](xecs_archetype.md) - The grouping of entities by components
+* [Family](xecs_pool_family.md) - Pool family is the place where the pools are, and the factor out [share-components](xecs_component_types_share.md) 
+* [Pool](xecs_pool.md) - Where the entities and its components are store.
+* [Structural Changes](xecs_structural_changes.md) - Creation, and Deletion of entities
+* [Scene](xecs_scene.md) - Scene topics
+* [Prefabs](xecs_prefab.md) - Prefabs topic
+* [App Context](xecs_app_context.md) - How xecs is used under different apps
 
 ## XECS Structural map
 
@@ -41,7 +43,7 @@ Vector<Archetype>      Archetype                                   +------------
  +------------+    |   |                               |
  | Scene GUID |    |   | Family (start of scene)       |           Family                       
  | IndexSlot  |    |   | +---------------------------+ |           +---------------------------+
- +------------+    +---->| Shares                    }------------>| Shares                    }
+ +------------+    +---->| Shares                    }------------>| Shares                    |
  | Scene GUID |        | | +---------------------+++ | |           | +---------------------+++ |
  | IndexSlot  |        | | | entity   | entity   ||| | |           | | entity   | entity   ||| |
  +------------+        | | +---------------------+++ | |           | +---------------------+++ |

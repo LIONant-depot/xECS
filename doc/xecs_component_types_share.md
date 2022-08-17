@@ -16,71 +16,11 @@ A peculiarity of a share component is the requirement that they must have a uniq
 Building a filter in a share component means that we are going to create a reference back to all the entities that refers to this particular share component. This allow us to create systems that allow us to quickly go throw all the entities that are referring to this share component. A typical use case is if you want to render all the "cats" Entities together. However it is discourage to be using the filter as a default setting because it cost memory and performance.
 
 ## Family
-Entities are grouped into [Archetypes](Archetypes.md), however inside an [Archetype](Archetypes.md) entities are group into families. What is a family? A Family is an object that is created every time a new group of share components values becomes unique. Lets have a simple example first to illustrate this concent.
 
-Let's say I have two entities instances in one archetype. Lets also say that this Archetype has a share component. Lets call this share component the *render component*. Since we have two entities lets say one entity has a *Render Component* with the value "Box" and the other Entity has a *Render Component* with its value set to "Cat". This will mean that we have to different families. One family with a share component of value "Box", and another family which has another share component of a value "Cat". Each entity will be inside their respective family. 
+[Families](xecs_pool_family.md) represents a unique group of share-components values. As more [entities](xecs_component_entity.md) are inserted in the [Archetype](xecs_archetype.md) and those [Entities](xecs_component_entity.md), they first will be a search for the right [family](xecs_pool_family.md) for that [entity](xecs_component_entity.md) if it can not find it then it will create a new [family](xecs_pool_family.md) to contain that [entity](xecs_component_entity.md).
 
-*Example Visualization*
-~~~
-+-----------+
-| Archetype | ---> +---------+
-+-----------+      |         |      +----------+
-                   | Family  | ---> | Entity 1 |
-                   | "Box"   |      +----------+
-                   +---------+      
-                   |         |      +----------+
-                   | Family  | ---> | Entity 2 |
-                   | "Cat"   |      +----------+
-                   +---------+ 
-~~~
 
-So the generic form then is...
-
-~~~
-+-----------+
-| Archetype | ---> +---------+
-+-----------+      |         |      +--------+--------+--------+
-                   | Family  | ---> | Entity | Entity | ....   |
-                   |         |      +--------+--------+--------+
-                   +---------+      
-                   |         |      +--------+--------+--------+
-                   | Family  | ---> | Entity | Entity | ....   |
-                   |         |      +--------+--------+--------+
-                   +---------+ 
-                   |         |
-                   | ...     |
-                   |         |
-                   +---------+
-~~~
-
-So what happens if stead of a single share component you have two share component ( A *Render Component*, and a *Collider Component*) per entity? But this time you have 3 entities.
-1. **Entity** with (Share Components) *Render Component* = "cat", *Collider Component* = "sphere"
-2. **Entity** with (Share Components) *Render Component* = "box", *Collider Component* = "sphere"
-3. **Entity** with (Share Components) *Render Component* = "box", *Collider Component* = "box"
-
-~~~
-+-----------+
-| Archetype | ---> +---------+
-+-----------+      |         |      +----------+
-                   | Family  | ---> | Entity 1 |
-                   | "cat"   |      +----------+
-                   | "sphere"|
-                   +---------+      
-                   |         |      +----------+
-                   | Family  | ---> | Entity 2 |
-                   | "box"   |      +----------+
-                   | "sphere"|
-                   +---------+ 
-                   |         |      +----------+
-                   | Family  | ---> | Entity 3 |
-                   | "box"   |      +----------+
-                   | "box"   |
-                   +---------+
-~~~
-
-So a logical conclusion you could arrive is that we seem to be duplicating the share component "box" and "sphere" components. However this is not so, there is a single copy of these components (assuming they are share components of global scope). So you may ask, what they hell is a scope?
-
-***Questions:***
+### Questions
 
 **Can the user change a share component directly?**
 In xECS that atomic unity is the Entity, so there is not way to change a share component directly, which means you need to go throw a system like any other component.

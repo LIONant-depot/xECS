@@ -32,21 +32,22 @@ powershell write-host -fore White ----------------------------------------------
 powershell write-host -fore White XECS - FINDING VISUAL STUDIO / MSBuild
 powershell write-host -fore White ------------------------------------------------------------------------------------------------------
 cd /d %XECS_PATH%
-for /f "usebackq tokens=*" %%i in (`.\..\dependencies\xcore\bin\vswhere -latest -requires Microsoft.Component.MSBuild -find MSBuild\**\Bin\MSBuild.exe`) do (
-    SET MSBUILD=%%i
-    GOTO :BREAK_OUT
-)
-:BREAK_OUT
 
-for /f "usebackq tokens=1* delims=: " %%i in (`.\..\dependencies\xcore\bin\vswhere -latest -requires Microsoft.VisualStudio.Workload.NativeDesktop`) do (
+
+for /f "usebackq tokens=*" %%i in (`.\..\dependencies\xcore\bin\vswhere -version 16.0 -sort -requires Microsoft.Component.MSBuild -find MSBuild\**\Bin\MSBuild.exe`) do (
+    SET MSBUILD=%%i
+)
+
+for /f "usebackq tokens=1* delims=: " %%i in (`.\..\dependencies\xcore\bin\vswhere -version 16.0 -sort -requires Microsoft.VisualStudio.Workload.NativeDesktop`) do (
     if /i "%%i"=="installationPath" set VSPATH=%%j
 )
 
 IF EXIST "%MSBUILD%" ( 
-    echo OK 
+    echo VISUAL STUDIO VERSION: "%MSBUILD%"
+    echo INSTALLATION PATH: "%VSPATH%"
     GOTO :COMPILATION
     )
-echo Failed to find MSBuild!!! 
+powershell write-host -fore Red Failed to find VS2019 MSBuild!!! 
 GOTO :ERROR
 
 :COMPILATION
